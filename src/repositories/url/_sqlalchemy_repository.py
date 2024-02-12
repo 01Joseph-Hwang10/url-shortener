@@ -11,7 +11,7 @@ class SQLAlchemyURLRepository(URLRepository):
         # Create a new URL in the database
         url = models.URL(
             target_url=url,
-            key=key,
+            url_key=key,
         )
         self.db.add(url)
         self.db.commit()
@@ -21,6 +21,6 @@ class SQLAlchemyURLRepository(URLRepository):
 
     def find_by_key(self, key: str) -> models.URL | None:
         # Get the URL from the database by its key
-        url = self.db.query(models.URL).filter(models.URL.key == key).first()
+        url = self.db.query(models.URL).filter(models.URL.url_key == key).first()
 
         return url

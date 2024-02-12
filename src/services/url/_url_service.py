@@ -41,7 +41,7 @@ class URLService:
         return dtos.CreateURLOutput(
             shortened_url=urljoin(
                 get_settings().base_url,
-                url.key,
+                url.url_key,
             ),
         )
 

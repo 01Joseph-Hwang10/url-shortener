@@ -11,7 +11,7 @@ def service():
         db=[
             models.URL(
                 target_url="https://www.abc.com",
-                key="abc",
+                url_key="abc",
             ),
         ],
     )

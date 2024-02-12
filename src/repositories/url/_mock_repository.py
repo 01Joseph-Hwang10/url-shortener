@@ -12,13 +12,13 @@ class MockURLRepository(URLRepository):
     def create(self, url: str, key: str) -> models.URL:
         url = models.URL(
             target_url=url,
-            key=key,
+            url_key=key,
         )
         self.db.append(url)
         return url
 
     def find_by_key(self, key: str) -> models.URL | None:
         for url in self.db:
-            if url.key == key:
+            if url.url_key == key:
                 return url
         return None
