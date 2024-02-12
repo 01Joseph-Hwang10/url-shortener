@@ -19,3 +19,13 @@ build/
 
 # Nx
 .nx
+
+# Sensitive files
+*.env*
+
+# SQLite database files
+*.sqlite3
+
+# HTTP files
+*.http
+*.rest
