@@ -12,5 +12,6 @@ max-complexity = 10
 max-line-length = 88
 ignore = 
     W291,
-    E231
+    E231,
+    W503
     

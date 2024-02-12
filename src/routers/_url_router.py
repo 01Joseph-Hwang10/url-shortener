@@ -3,9 +3,10 @@ from fastapi import Depends, Request
 from fastapi import status
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
-from .. import dtos
-from ..config import get_db
-from ..services import URLService
+from src import dtos
+from src.config import get_db
+from src.services.url import URLService
+from src.repositories.url import URLRepository
 
 router = APIRouter()
 
@@ -15,7 +16,7 @@ def create_url(
     url: dtos.CreateURLInput,
     db: Session = Depends(get_db),
 ):
-    service = URLService(db=db)
+    service = URLService(urls=URLRepository(db=db))
     return service.create_url(request=url)
 
 
@@ -25,8 +26,8 @@ def forward_to_target_url(
     request: Request,
     db: Session = Depends(get_db),
 ):
-    service = URLService(db=db)
-    url = service.get_db_url_by_key(url_key=url_key)
+    service = URLService(urls=URLRepository(db=db))
+    url = service.get_url_by_key(url_key=url_key)
     return RedirectResponse(
         url=url.target_url,
         status_code=status.HTTP_308_PERMANENT_REDIRECT,

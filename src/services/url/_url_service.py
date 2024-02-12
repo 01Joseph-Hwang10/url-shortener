@@ -1,23 +1,25 @@
 import validators
 from urllib.parse import urljoin
 from fastapi import HTTPException
-from sqlalchemy.orm import Session
 from shortuuid import ShortUUID
-from ..config import get_settings
-from .. import models, dtos
+from src import models, dtos
+from src.config import get_settings
+from src.repositories.url import URLRepository
 
 
 class URLService:
 
     def __init__(
         self,
-        db: Session,
+        urls: URLRepository,
+        url_key_length: int = 10,
     ) -> None:
-        self.db = db
+        self.urls = urls
+        self.url_key_length = url_key_length
 
     def _create_unique_random_key(
         self,
-        length: int = 10,
+        length: int,
     ) -> str:
         return ShortUUID().random(length=length)
 
@@ -30,13 +32,10 @@ class URLService:
             )
 
         # Create a new URL in the database
-        url = models.URL(
-            target_url=request.target_url,
-            key=self._create_unique_random_key(),
+        url = self.urls.create(
+            url=request.target_url,
+            key=self._create_unique_random_key(self.url_key_length),
         )
-        self.db.add(url)
-        self.db.commit()
-        self.db.refresh(url)
 
         # Return the shortened URL
         return dtos.CreateURLOutput(
@@ -46,9 +45,9 @@ class URLService:
             ),
         )
 
-    def get_db_url_by_key(self, url_key: str) -> models.URL:
+    def get_url_by_key(self, url_key: str) -> models.URL:
         # Get the URL from the database by its key
-        url = self.db.query(models.URL).filter(models.URL.key == url_key).first()
+        url = self.urls.find_by_key(url_key)
 
         # Raise an exception if the URL doesn't exist
         if not url:

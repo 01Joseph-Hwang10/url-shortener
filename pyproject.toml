@@ -18,11 +18,16 @@ target-version = ["py311"]
 include = "\\.pyi?$"
 extend-exclude = "/(\n  # The following are specific to Black, you probably don't want those.\n  tests/data\n  | profiling\n)/\n"
 
+[tool.poe.tasks]
+test = "python -m pytest"
+start = "python -m app"
+export-requirements = "poetry export -f requirements.txt --output requirements.txt --without-hashes"
+
 [tool.poetry.dependencies]
 python = ">=3.11,<3.13"
 fastapi = "^0.109.2"
 pydantic = "^2.6.1"
-uvicorn = {extras = ["standard"], version = "^0.27.1"}
+uvicorn = { extras = ["standard"], version = "^0.27.1" }
 sqlalchemy = "^2.0.26"
 httpx = "^0.26.0"
 jinja2 = "^3.1.3"
