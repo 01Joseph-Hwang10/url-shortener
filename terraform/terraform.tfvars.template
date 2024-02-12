@@ -1,0 +1,4 @@
+
+aws_region = "ap-northeast-2" # Change it if you want to deploy in other region
+
+github_owner = "<your-github-username>"

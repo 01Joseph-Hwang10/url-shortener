@@ -1,5 +1,5 @@
 [build-system]
-requires = [ "poetry-core",]
+requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
@@ -7,12 +7,14 @@ name = "url-shortener"
 version = "0.0.0"
 description = ""
 authors = []
-readme = [ "README.md",]
-exclude = [ "**/tests", "**/package.json", "**/project.json",]
+readme = ["README.md"]
+exclude = ["**/tests", "**/package.json", "**/project.json"]
+[[tool.poetry.packages]]
+include = "src"
 
 [tool.black]
 line-length = 88
-target-version = [ "py311",]
+target-version = ["py311"]
 include = "\\.pyi?$"
 extend-exclude = "/(\n  # The following are specific to Black, you probably don't want those.\n  tests/data\n  | profiling\n)/\n"
 
