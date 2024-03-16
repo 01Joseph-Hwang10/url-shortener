@@ -1,9 +1,6 @@
 import pytest
-from dotenv import load_dotenv
 from fastapi.testclient import TestClient
-from src.db import register_database, setup_db_for_development
-from src.app import bootstrap
-from src.app.container import Container
+from app import app
 
 
 @pytest.fixture(scope="module")
@@ -17,27 +14,7 @@ def shared():
 
 @pytest.fixture(scope="module")
 def client():
-    # Load dotenv
-    load_dotenv()
-
-    # Wire up dependencies
-    container = Container()
-    container.init_resources()
-    register_database(container.db())
-    setup_db_for_development(truncate=True)
-    container.wire()
-
-    # Create app
-    app = bootstrap()
-    app.container = container
-
-    # Initiate test client
-    client = TestClient(app)
-    yield client
-
-    # Clean up
-    container.shutdown_resources()
-    container.unwire()
+    return TestClient(app)
 
 
 @pytest.mark.order(1)
