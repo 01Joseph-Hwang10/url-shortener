@@ -21,7 +21,7 @@ extend-exclude = "/(\n  # The following are specific to Black, you probably don'
 [tool.poe.tasks]
 test = "python -m pytest"
 start = "python -m app"
-export-requirements = "poetry export -f requirements.txt --output requirements.txt --without-hashes"
+export-requirements = "poetry export -f requirements.txt --output requirements.txt --without-hashes --all-extras --with dev,test"
 
 [tool.poetry.dependencies]
 python = ">=3.11,<3.12"
