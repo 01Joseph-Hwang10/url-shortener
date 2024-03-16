@@ -6,8 +6,6 @@ Simple URL Shortener using FastAPI and SQLAlchemy
 
 - Python: Version 3.11 or higher
 - Poetry
-- Supabase
-- AWS
 
 ## Installation
 
