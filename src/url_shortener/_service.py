@@ -1,10 +1,10 @@
+import validators
 from urllib.parse import urljoin
 from dependency_injector.wiring import Provide
 from shortuuid import ShortUUID
 from src.db.model import URL
 from src.app.config import Config
-from ._dto import CreateShortURLRequest, CreateShortURLResponse
-from ._exception import URLNotFoundExcpetion
+from ._exception import URLNotFoundExcpetion, InvalidURLException
 
 
 class URLShortenerService:
@@ -28,12 +28,12 @@ class URLShortenerService:
         Raises:
             URLNotFoundException: If URL is not found.
         """
-        url: URL = self.url.get(short_slug=short_slug)
+        url: URL = self.url.select().where(URL.short_slug == short_slug).first()
         if url is None:
             raise URLNotFoundExcpetion(f"URL with short slug {short_slug} not found")
         return url.original_url
 
-    def create(self, request: CreateShortURLRequest) -> CreateShortURLResponse:
+    def create(self, original_url: str) -> dict:
         """Create a shortened URL.
         If given url is already shortened, return the existing short url.
 
@@ -42,14 +42,29 @@ class URLShortenerService:
 
         Returns:
             CreateShortURLResponse object.
-        """
-        url: URL = self.url.get(original_url=request.url) or self.url.create(
-            original_url=request.url,
-            short_slug=ShortUUID().random(length=8),
-        )
 
-        return CreateShortURLResponse(
-            original_url=url.original_url,
-            short_slug=url.short_slug,
-            short_url=urljoin(f"https://{self.config.server_name}", url.short_slug),
-        )
+        Raises:
+            InvalidURLException: If given URL is invalid.
+        """
+        if not validators.url(original_url):
+            raise InvalidURLException(f"Invalid URL: {original_url}")
+
+        newly_created: bool = False
+        url: URL = self.url.select().where(URL.original_url == original_url).first()
+        if not url:
+            url = self.url.create(
+                original_url=original_url,
+                short_slug=ShortUUID().random(length=8),
+            )
+            newly_created = True
+
+        protocol = "https" if self.config.env != "development" else "http"
+        return {
+            "original_url": url.original_url,
+            "short_slug": url.short_slug,
+            "short_url": urljoin(
+                protocol + "://" + self.config.server_name,
+                url.short_slug,
+            ),
+            "newly_created": newly_created,
+        }

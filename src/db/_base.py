@@ -1,8 +1,12 @@
-from peewee import Model, Proxy
+from peewee import Model, Proxy, Database
 
-database_proxy = Proxy()
+_database_proxy = Proxy()
+
+
+def register_database(database: Database) -> None:
+    _database_proxy.initialize(database)
 
 
 class BaseModel(Model):
     class Meta:
-        database = database_proxy
+        database = _database_proxy

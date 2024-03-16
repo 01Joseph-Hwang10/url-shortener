@@ -1,9 +1,16 @@
-from dependency_injector.containers import DeclarativeContainer
-from dependency_injector.providers import Singleton, Object
+from dependency_injector.containers import DeclarativeContainer, WiringConfiguration
+from dependency_injector.providers import Singleton, Object, Resource
 from peewee import Database, SqliteDatabase
 from src.db.model import URL
-from src.url_shortener import URLShortenerService
+from src.url_shortener._service import URLShortenerService
 from .config import Config
+
+
+def _database_resource():
+    db = SqliteDatabase("db.sqlite3")
+    db.connect()
+    yield db
+    db.close()
 
 
 class Container(DeclarativeContainer):
@@ -11,19 +18,26 @@ class Container(DeclarativeContainer):
     # --------------------
     # Config
     # --------------------
-    config: Config = Singleton(Config)
+    wiring_config: WiringConfiguration = WiringConfiguration(
+        modules=[
+            "src.url_shortener._service",
+            "src.url_shortener._router",
+        ],
+        auto_wire=False,
+    )
+    config: Singleton[Config] = Singleton(Config)
 
     # --------------------
     # Database
     # --------------------
-    db: Database = Object(SqliteDatabase("db.sqlite3"))
+    db: Resource[Database] = Resource(_database_resource)
 
     # --------------------
     # Models
     # --------------------
-    url: URL = Object(URL)
+    url: Object[URL] = Object(URL)
 
     # --------------------
     # Services
     # --------------------
-    url_shortener: URLShortenerService = Singleton(URLShortenerService)
+    url_shortener: Singleton[URLShortenerService] = Singleton(URLShortenerService)

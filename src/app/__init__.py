@@ -1,1 +1,1 @@
-from ._app import app  # noqa: F401
+from ._bootstrap import bootstrap  # noqa: F401

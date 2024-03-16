@@ -15,4 +15,4 @@ class URL(BaseModel):
     """
 
     class Meta:
-        db_table = "urls"
+        table_name = "urls"
