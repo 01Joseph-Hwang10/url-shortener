@@ -1,4 +1,8 @@
 
+variable "aws_region" {
+  type = string
+}
+
 variable "github_owner" {
   type        = string
   description = <<EOT

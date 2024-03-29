@@ -1,0 +1,12 @@
+version: '3.7'
+
+services:
+  url_shortener:
+    context: .
+    dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - ENV=production
+      - SERVER_NAME=http://ec2-3-38-149-36.ap-northeast-2.compute.amazonaws.com
+      - SSL_ENABLED=false

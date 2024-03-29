@@ -19,3 +19,8 @@ class Config:
         return os.environ.get("SERVER_NAME", None) or throw(
             ValueError("SERVER_NAME is not set")
         )
+
+    @property
+    def ssl_enabled(self) -> bool:
+        """SSL enabled."""
+        return os.environ.get("SSL_ENABLED", None) == "true"

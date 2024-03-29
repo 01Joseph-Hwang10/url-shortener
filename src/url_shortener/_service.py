@@ -58,7 +58,7 @@ class URLShortenerService:
             )
             newly_created = True
 
-        protocol = "https" if self.config.env != "development" else "http"
+        protocol = "https" if self.config.ssl_enabled else "http"
         return {
             "original_url": url.original_url,
             "short_slug": url.short_slug,

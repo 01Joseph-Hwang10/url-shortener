@@ -1,0 +1,48 @@
+---
+- name: Setup NGINX reverse proxy for Docker container
+  hosts: your_server
+  become: yes
+  tasks:
+      - name: Install required packages
+        apt:
+            name: "{{ item }}"
+            state: present
+        loop:
+            - nginx
+            - docker.io
+            - docker-compose
+            - git
+
+      - name: Start Docker service
+        service:
+            name: docker
+            state: started
+
+      - name: Clone repository with Dockerfile
+        git:
+            repo: "https://github.com/01Joseph-Hwang10/url-shortener.git"
+            dest: "$HOME/app"
+        become: yes
+
+      - name: Build Docker container
+        command: "docker-compose -f "$HOME/app/docker-compose.yml" up -d"
+        become: yes
+
+      - name: Configure NGINX reverse proxy
+        template:
+            src: "$HOME/app/nginx.conf"
+            dest: /etc/nginx/sites-available/url_shortener
+        notify: Restart NGINX
+
+      - name: Enable NGINX site
+        file:
+            src: /etc/nginx/sites-available/url_shortener
+            dest: /etc/nginx/sites-enabled/url_shortener
+            state: link
+        notify: Restart NGINX
+
+  handlers:
+      - name: Restart NGINX
+        service:
+            name: nginx
+            state: restarted
