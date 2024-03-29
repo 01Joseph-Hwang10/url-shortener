@@ -11,18 +11,18 @@
             - nginx
             - docker.io
             - docker-compose
-            - git
 
       - name: Start Docker service
         service:
             name: docker
             state: started
 
-      - name: Clone repository with Dockerfile
-        git:
-            repo: "https://github.com/01Joseph-Hwang10/url-shortener.git"
+      - name: Synchronize local directory to remote directory
+        synchronize:
+            src: "{{ playbook_dir }}/.."
             dest: "$HOME/app"
-        become: yes
+            rsync_opts:
+                - "--exclude-from={{ playbook_dir }}/../.dockerignore"
 
       - name: Build Docker container
         command: "docker-compose -f "$HOME/app/docker-compose.yml" up -d"
