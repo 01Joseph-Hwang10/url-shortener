@@ -2,22 +2,24 @@ version: '3.7'
 
 services:
   db_migrate:
-    context: .
-    dockerfile: dockerfiles/db_migrate.dockerfile
+    build:
+      context: .
+      dockerfile: docker/db_migrate.dockerfile
     environment:
       - ENV=production
     volumes:
       - db:/app/db:rw
 
   url_shortener:
-    context: .
-    dockerfile: dockerfiles/url_shortener.dockerfile
+    build:
+      context: .
+      dockerfile: docker/url_shortener.dockerfile
     restart: always
     ports:
       - "8000:8000"
     environment:
       - ENV=production
-      - SERVER_NAME=http://ec2-3-38-149-36.ap-northeast-2.compute.amazonaws.com
+      - SERVER_NAME=ec2-3-38-149-36.ap-northeast-2.compute.amazonaws.com
       - SSL_ENABLED=false
     volumes:
       - db:/app/db:rw
@@ -31,7 +33,8 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx.conf:/etc/nginx/sites-enabled/default
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/sites-enabled:/etc/nginx/sites-enabled
 
 volumes:
   db:

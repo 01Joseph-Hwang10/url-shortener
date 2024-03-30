@@ -1,5 +1,5 @@
 ---
-- name: Setup NGINX reverse proxy for Docker container
+- name: Spin up docker compose services
   hosts: url_shortener
   become: yes
   tasks:
@@ -11,20 +11,32 @@
             - nginx
             - docker.io
             - docker-compose
+            - rsync
 
       - name: Start Docker service
         service:
             name: docker
             state: started
 
+      - name: Declare project root directory
+        set_fact:
+            project_root: "{{ playbook_dir }}/.."
+
+      - name: Read exclusion patterns from .dockerignore
+        delegate_to: localhost
+        become: no
+        shell: cat "{{ project_root }}/.dockerignore" | awk '!/^#/ && !/^$/' | awk '{print "--exclude=" $1}'
+        register: exclude_patterns
+
       - name: Synchronize local directory to remote directory
         synchronize:
-            src: "{{ ansible_env.PWD }}"
-            dest: "/app"
-            rsync_opts:
-                - "--exclude-from=.dockerignore"
+            src: "{{ project_root }}"
+            dest: /app
+            recursive: true
+            private_key: "{{ project_root }}/{{ private_key }}"
+            rsync_opts: "{{ exclude_patterns.stdout_lines }}"
+        vars:
+            private_key: "{{ hostvars[inventory_hostname]['ansible_ssh_private_key_file'] }}"
 
       - name: Build Docker container
-        command: "docker-compose -f "/app/docker-compose.yml" up -d"
-        become: yes
-
+        command: docker-compose -f "/app/docker-compose.yml" up -d

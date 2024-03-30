@@ -114,5 +114,5 @@ resource "aws_instance" "url_shortener_vm" {
 
 resource "aws_ec2_instance_state" "url_shortener_vm" {
   instance_id = aws_instance.url_shortener_vm.id
-  state       = "stopped"
+  state       = "running"
 }

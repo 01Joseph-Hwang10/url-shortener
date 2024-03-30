@@ -31,13 +31,16 @@ build/
 *.rest
 
 # Terraform files
-terraform/
+terraform
 
 # Ansible files
-ansible/
+ansible
 
 # Test files
-tests/
+tests
 
 # Configuration files
-.vscode/
+.vscode
+
+# Git
+.git
