@@ -7,7 +7,7 @@ from .config import Config
 
 
 def _database_resource():
-    db = SqliteDatabase("db.sqlite3")
+    db = SqliteDatabase("db/db.sqlite3")
     db.connect()
     yield db
     db.close()

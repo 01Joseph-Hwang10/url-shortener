@@ -1,6 +1,6 @@
 ---
 - name: Setup NGINX reverse proxy for Docker container
-  hosts: your_server
+  hosts: url_shortener
   become: yes
   tasks:
       - name: Install required packages
@@ -19,30 +19,12 @@
 
       - name: Synchronize local directory to remote directory
         synchronize:
-            src: "{{ playbook_dir }}/.."
-            dest: "$HOME/app"
+            src: "{{ ansible_env.PWD }}"
+            dest: "/app"
             rsync_opts:
-                - "--exclude-from={{ playbook_dir }}/../.dockerignore"
+                - "--exclude-from=.dockerignore"
 
       - name: Build Docker container
-        command: "docker-compose -f "$HOME/app/docker-compose.yml" up -d"
+        command: "docker-compose -f "/app/docker-compose.yml" up -d"
         become: yes
 
-      - name: Configure NGINX reverse proxy
-        template:
-            src: "$HOME/app/nginx.conf"
-            dest: /etc/nginx/sites-available/url_shortener
-        notify: Restart NGINX
-
-      - name: Enable NGINX site
-        file:
-            src: /etc/nginx/sites-available/url_shortener
-            dest: /etc/nginx/sites-enabled/url_shortener
-            state: link
-        notify: Restart NGINX
-
-  handlers:
-      - name: Restart NGINX
-        service:
-            name: nginx
-            state: restarted

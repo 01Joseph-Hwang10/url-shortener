@@ -759,6 +759,21 @@ files = [
 ]
 
 [[package]]
+name = "peewee-migrate"
+version = "1.12.2"
+description = "Support for migrations in Peewee ORM"
+optional = false
+python-versions = ">=3.8,<4.0"
+files = [
+    {file = "peewee_migrate-1.12.2-py3-none-any.whl", hash = "sha256:2930bf83ef802cdb5fb123116c5eb87cbf3756cb27674f674923be6bb27dabee"},
+    {file = "peewee_migrate-1.12.2.tar.gz", hash = "sha256:c8187c97b756909ea57e77cce06ae66395219e86764ef0b286a7bc72ff7405ad"},
+]
+
+[package.dependencies]
+click = "*"
+peewee = ">=3,<4"
+
+[[package]]
 name = "platformdirs"
 version = "4.2.0"
 description = "A small Python package for determining appropriate platform-specific dirs, e.g. a \"user data dir\"."
@@ -1545,4 +1560,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.11,<3.12"
-content-hash = "5129e30ad3639dc9805221e516fe178a8a17b6b8fe3ac22542efced1c0210f89"
+content-hash = "638ab40458dcc0056141953a40917372ea3b0ef38192f6dccf8963a5fbb42c49"

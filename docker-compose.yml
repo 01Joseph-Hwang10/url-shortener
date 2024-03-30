@@ -1,12 +1,37 @@
 version: '3.7'
 
 services:
+  db_migrate:
+    context: .
+    dockerfile: Dockerfile
+    environment:
+      - ENV=production
+    volumes:
+      - db:/app/db:rw
+
   url_shortener:
     context: .
     dockerfile: Dockerfile
+    restart: always
     ports:
       - "8000:8000"
     environment:
       - ENV=production
       - SERVER_NAME=http://ec2-3-38-149-36.ap-northeast-2.compute.amazonaws.com
       - SSL_ENABLED=false
+    volumes:
+      - db:/app/db:rw
+    depends_on:
+      - db_migrate
+
+  nginx:
+    image: nginx:latest
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/sites-enabled/default
+
+volumes:
+  db:
