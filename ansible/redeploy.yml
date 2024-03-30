@@ -1,0 +1,20 @@
+---
+- name: Rebuild and redeploy docker compose deployment
+  hosts: url_shortener
+  become: yes
+  tasks:
+      - import_role:
+            name: sync-exclude-patterns
+
+      - name: Bring down containers
+        docker_compose_v2:
+            project_src: /app
+            state: absent
+
+      - import_role:
+            name: push-files
+
+      - name: Bring up containers
+        community.docker.docker_compose_v2:
+            project_src: /app
+            state: present

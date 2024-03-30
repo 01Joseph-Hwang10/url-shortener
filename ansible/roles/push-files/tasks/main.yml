@@ -1,0 +1,7 @@
+---
+- name: Synchronize local directory to remote directory
+  synchronize:
+      src: "{{ playbook_dir }}/../"
+      dest: /app/
+      rsync_opts:
+          - "--exclude-from=config/exclude-patterns.txt"

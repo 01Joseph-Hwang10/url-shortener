@@ -1,0 +1,5 @@
+url_shortener:
+    hosts:
+        ec2-43-200-254-88.ap-northeast-2.compute.amazonaws.com:
+            ansible_user: admin
+            ansible_ssh_private_key_file: ../terraform/vars/url-shortener-key-pair.pem

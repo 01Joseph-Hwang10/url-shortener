@@ -19,7 +19,7 @@ services:
       - "8000:8000"
     environment:
       - ENV=production
-      - SERVER_NAME=ec2-3-38-149-36.ap-northeast-2.compute.amazonaws.com
+      - SERVER_NAME=ec2-43-200-254-88.ap-northeast-2.compute.amazonaws.com
       - SSL_ENABLED=false
     volumes:
       - db:/app/db:rw
@@ -34,7 +34,6 @@ services:
       - "443:443"
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./nginx/sites-enabled:/etc/nginx/sites-enabled
 
 volumes:
   db:

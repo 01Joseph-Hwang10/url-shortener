@@ -1,0 +1,5 @@
+---
+- name: Synchronize exclude patterns from .dockerignore
+  delegate_to: localhost
+  become: no
+  shell: "{{ playbook_dir }}/roles/sync-exclude-patterns/tasks/sync-exclude-patterns.sh"

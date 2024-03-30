@@ -1,0 +1,12 @@
+---
+- name: Spin up initial docker compose deployment
+  hosts: url_shortener
+  become: yes
+  roles:
+      - sync-exclude-patterns
+      - push-files
+  tasks:
+      - name: Deploy services with docker compose
+        community.docker.docker_compose_v2:
+            project_src: /app
+            state: present

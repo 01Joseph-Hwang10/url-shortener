@@ -97,6 +97,7 @@ resource "aws_instance" "url_shortener_vm" {
   associate_public_ip_address = true
   source_dest_check           = false
   key_name                    = aws_key_pair.url_shortener_key_pair.key_name
+  user_data                   = null
   user_data_replace_on_change = true
 
   root_block_device {
@@ -113,5 +114,5 @@ resource "aws_instance" "url_shortener_vm" {
 
 resource "aws_ec2_instance_state" "url_shortener_vm" {
   instance_id = aws_instance.url_shortener_vm.id
-  state       = "running"
+  state       = "stopped"
 }
