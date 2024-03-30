@@ -97,7 +97,6 @@ resource "aws_instance" "url_shortener_vm" {
   associate_public_ip_address = true
   source_dest_check           = false
   key_name                    = aws_key_pair.url_shortener_key_pair.key_name
-  user_data                   = file("setup.sh")
   user_data_replace_on_change = true
 
   root_block_device {
