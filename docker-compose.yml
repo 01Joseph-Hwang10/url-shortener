@@ -3,7 +3,7 @@ version: '3.7'
 services:
   db_migrate:
     context: .
-    dockerfile: Dockerfile
+    dockerfile: dockerfiles/db_migrate.dockerfile
     environment:
       - ENV=production
     volumes:
@@ -11,7 +11,7 @@ services:
 
   url_shortener:
     context: .
-    dockerfile: Dockerfile
+    dockerfile: dockerfiles/url_shortener.dockerfile
     restart: always
     ports:
       - "8000:8000"
