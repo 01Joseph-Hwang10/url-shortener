@@ -25,6 +25,11 @@ Some examples (model - class or model name)::
 
 """
 
+import sys
+from os import getcwd
+
+sys.path.append(getcwd())
+
 from contextlib import suppress
 
 import peewee as pw
