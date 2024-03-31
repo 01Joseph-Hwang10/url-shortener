@@ -13,6 +13,7 @@ class URL(BaseModel):
     Example:
         - https://example.com/short_slug
     """
+    metadata = CharField(null=True)
 
     class Meta:
         table_name = "urls"
