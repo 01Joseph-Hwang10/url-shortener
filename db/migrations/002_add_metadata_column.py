@@ -47,4 +47,4 @@ def migrate(migrator: Migrator, database: pw.Database, *, fake=False):
 
 def rollback(migrator: Migrator, database: pw.Database, *, fake=False):
     """Write your rollback migrations here."""
-    migrator.add_fields("urls", "metadata")
+    migrator.remove_fields("urls", "metadata")
