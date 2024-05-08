@@ -3,7 +3,7 @@
 # ---------------------------
 resource "github_repository" "url_shortener" {
   name            = "url-shortener"
-  visibility      = "private"
+  visibility      = "public"
   has_issues      = true
   has_projects    = true
   has_downloads   = true
